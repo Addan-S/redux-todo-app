@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import '../syles/TodoList.css';
+import { connect } from 'react-redux';
 
-export default class TodoList extends Component {
+
+const mapStateToProps = (store) => ({
+  addTodoItem: store.todoReducer
+})
+
+
+class TodoList extends Component {
   constructor() {
     super()
     this.state = {
@@ -12,31 +19,22 @@ export default class TodoList extends Component {
     this.onChange = this.onChange.bind(this);
     // this.handleFormReset = this.handleFormReset.bind(this);
   }
-
   submitForm(event) {
     event.preventDefault();
-
     // Grab the input that the user typed in
     const inputtedItem = document.querySelector("#inputted-item");
-
     // The parameters "state" & "props" are copies of this components state and props 
     // That way we can manipulate them without touching the real state or real props 
     this.setState((state, props) => {
-
       state.savedTodoItems.push(inputtedItem.value);
       return {savedTodoItems: state.savedTodoItems, inputtedItem: ''};
     });
-
-
   }
-
   onChange(event) {
     // Will capture the input value on the <input> tag and save into state 
     // Once the form is submitted, the setstate on the function will reset the value to an empty string
-
     this.setState({inputtedItem: event.target.value})
   }
-
   render() {
     // -------------------------------------------------
     // loop through all todo items in state using map() 
@@ -46,7 +44,7 @@ export default class TodoList extends Component {
       // console.log("testing list items****", id)
       return (<div id="item-wrapper" key={index}><p id="item" >{item}</p> </div>)
     })
-
+    console.log(this.props.todoState.savedTodoItems);
     return (
       <div className="todo">
         <form onSubmit={this.submitForm} > 
@@ -64,3 +62,4 @@ export default class TodoList extends Component {
     )
   }
 }
+export default connect(mapStateToProps, null)(TodoList);
